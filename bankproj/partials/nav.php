@@ -1,5 +1,5 @@
 <?php
-//we'll be including this on most/all pages so it's a good place to include anything else we want on those pages
+//we'll be including this on most/all pages so it's a good place to include anything else we want on those p>
 require_once(__DIR__ . "/../lib/helpers.php");
 ?>
 <ul>
@@ -13,3 +13,5 @@ require_once(__DIR__ . "/../lib/helpers.php");
         <li><a href="logout.php">Logout</a></li>
     <?php endif; ?>
 </ul>
+
+
