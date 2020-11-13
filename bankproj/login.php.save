@@ -1,7 +1,7 @@
 <?php require_once(__DIR__ . "/partials/nav.php"); ?>
 <form method="POST">
-    <label for="email">Email/Username:</label>
-    <input type="text" name="email" required/>
+    <label for="email">Email:</label>
+    <input type="text"
     <label for="p1">Password:</label>
     <input type="password" id="p1" name="password" required/>
     <input type="submit" name="login" value="Login"/>
@@ -21,18 +21,21 @@ if (isset($_POST["login"])) {
     if (!isset($email) || !isset($password)) {
         $isValid = false;
     }
-
+    if (!strpos($email, "@")) {
+        $isValid = false;
+        echo "<br>Invalid email<br>";
+    }
     if ($isValid) {
         $db = getDB();
         if (isset($db)) {
-            $stmt = $db->prepare("SELECT id, email, username, password from Users WHERE email or Username = :email LIMIT 1");
+            $stmt = $db->prepare("SELECT id, email, username, password from Users WHERE email = :email LIMIT 1");
 
             $params = array(":email" => $email);
             $r = $stmt->execute($params);
-            //echo "db returned: " . var_export($r, true);
+            echo "db returned: " . var_export($r, true);
             $e = $stmt->errorInfo();
             if ($e[0] != "00000") {
-                flash("uh oh something went wrong: "); // . var_export($e, true);
+                echo "uh oh something went wrong: " . var_export($e, true);
             }
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($result && isset($result["password"])) {
@@ -56,19 +59,16 @@ SELECT Roles.name FROM Roles JOIN UserRoles on Roles.id = UserRoles.role_id wher
                     header("Location: home.php");
                 }
                 else {
-                    flash("Have you forgotten your password?<br>");
+                    echo "<br>Invalid password, get out!<br>";
                 }
             }
             else {
-                flash("Invalid Email or Username<br>");
+                echo "<br>Invalid user<br>";
             }
         }
     }
     else {
-        flash("There was a validation issue");
+        echo "There was a validation issue";
     }
 }
-
-require(__DIR__ . "/partials/flash.php");
-
 ?>

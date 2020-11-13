@@ -32,7 +32,7 @@ if (isset($_POST["login"])) {
             //echo "db returned: " . var_export($r, true);
             $e = $stmt->errorInfo();
             if ($e[0] != "00000") {
-                flash("uh oh something went wrong: "); // . var_export($e, true);
+                echo "uh oh something went wrong: " . var_export($e, true);
             }
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($result && isset($result["password"])) {
@@ -56,19 +56,16 @@ SELECT Roles.name FROM Roles JOIN UserRoles on Roles.id = UserRoles.role_id wher
                     header("Location: home.php");
                 }
                 else {
-                    flash("Have you forgotten your password?<br>");
+                    echo "<br>Invalid password, get out!<br>";
                 }
             }
             else {
-                flash("Invalid Email or Username<br>");
+                echo "<br>Username/Emailecho "<br>Invalid password, get out!<br>"; and passwords do not match!<br>";
             }
         }
     }
     else {
-        flash("There was a validation issue");
+        echo "There was a validation issue";
     }
 }
-
-require(__DIR__ . "/partials/flash.php");
-
 ?>
