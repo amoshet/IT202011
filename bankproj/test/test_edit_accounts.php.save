@@ -1,0 +1,55 @@
+<?php require_once(__DIR__ . "/../partials/nav.php"); ?>
+<?php
+if (!has_role("Admin")) {
+    //this will redirect to login and kill the rest of this script (prevent it from executing)
+    flash("You don't have permission to access this page");
+    die(header("Location: ../login.php"));
+}
+?>
+<?php
+//we'll put this at the top so both php block have access to it
+if(isset($_GET["id"])){
+	$id = $_GET["id"];
+}
+?>
+<?php
+//saving
+if(isset($_POST["save"])){
+	//TODO add proper validation/checks
+	$acctnum = $_POST["account_number"];
+	$accttype = $_POST["account_type"];
+	$bal = $_POST["balance"];
+	$user = get_user_id();
+	$db = getDB();
+	$stmt = $db->prepare("INSERT INTO Accounts (account_number,account_type, balance, user_id) VALUES(:account_number, :account_type, :balance, :user)");
+	$r = $stmt->execute([
+		":account_number"=>$acctnum,
+		":account_type"=>$accttype,
+		":balance"=>$bal,
+		":user"=>$user
+	]);
+	if($r){
+		flash("Updated successfully with id: " . $db->lastInsertId());
+	}
+	else{
+		$e = $stmt->errorInfo();
+		flash("Error updating: " . var_export($e, true));
+	}
+}
+	else{
+		flash("ID isn't set, we need an ID in order to update");
+	}
+}
+?>
+<?php
+//fetching
+$result = [];
+if(isset($id)){
+	$id = $_GET["id"];
+	$db = getDB();
+	$stmt = $db->prepare("SELECT * FROM F20_Eggs where id = :id");
+	$r = $stmt->execute([":id"=>$id]);
+	$result = $stmt->fetch(PDO::FETCH_ASSOC);
+}
+?>
+}
