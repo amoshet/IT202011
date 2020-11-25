@@ -22,12 +22,12 @@ if(isset($_POST["save"])){
 	$user = get_user_id();
 	$db = getDB();
 	if(isset($id)){	
-		$stmt = $db->prepare("UPDATE Accounts set account_number=:account_number,account_type=:account_type, balance=:balance, user_id=:user_id) VALUES(:account_number, :account_type, :balance, :user)");
+		$stmt = $db->prepare("UPDATE Accounts set account_number=:account_number,account_type=:account_type, balance=:balance where id=:id");
 		$r = $stmt->execute([
 			":account_number"=>$acctnum,
 			":account_type"=>$accttype,
 			":balance"=>$bal,
-			":user"=>$user
+			":id"=>$id
 		]);
 		if($r){
 			flash("Updated successfully with id: " . $db->lastInsertId());
