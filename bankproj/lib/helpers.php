@@ -74,4 +74,25 @@ function getURL($path) {
     return $_SERVER["CONTEXT_PREFIX"] . "/repo/bankproj/$path";
 }
 
+function getAccount($n){
+    switch ($n) {
+        case "checking":
+            echo "Checking";
+            break;
+        case "savings":
+            echo "Savings";
+            break;
+        case "loan":
+            echo "Loan";
+            break;
+        case "world":
+            echo "World";
+            break;
+        default:
+            echo "Unsupported state: " . safer_echo($n);
+            break;
+        }
+}
+
+
 ?>
