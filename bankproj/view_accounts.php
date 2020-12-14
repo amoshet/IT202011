@@ -13,7 +13,7 @@ $id = get_user_id();
 $results = [];
 if (isset($id)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT id, account_number, account_type, balance FROM Accounts WHERE user.id=:id LIMIT 5");
+    $stmt = $db->prepare("SELECT id, account_number, account_type, balance FROM Accounts WHERE user_id=:id LIMIT 5");
     $r = $stmt->execute([":id" => $id]);
     if ($r) {
 	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -38,17 +38,15 @@ if (isset($id)) {
                         <div><?php getAccount($r["account_type"]); ?></div>
                     </div>
                     <div>
-                        <div>Balance</div>
+                        <div>Balance:</div>
                         <div><?php safer_echo($r["balance"]); ?></div>
                     </div>
                     <div>
-                        <div>Owner Id:</div>5
-                        <div><?php safer_echo($r["id"]); ?></div>
-                    </div>
-                  "/*"  <div>
-                        <a type="button" href="test_edit_accounts.php?id=<?php safer_echo($r['id']); ?>">Edit</a>
-                        <a type="button" href="test_view_accounts.php?id=<?php safer_echo($r['id']); ?>">View</a>
-                    </div> "*/"
+                        <a type="button" href="#?>">Deposit</a>
+			<a type="button" href="#?>">Withdraw</a>
+			<a type="button" href="#?>"><br>Transfer</a>
+                        <a type="button" href="view_accounts.php?id=<?php safer_echo($r['id']); ?>">Transactions</a>
+                    </div> 
                 </div>
             <?php endforeach; ?>
         </div>
