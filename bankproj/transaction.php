@@ -1,5 +1,3 @@
-/* placeholder for deposit, withdraw, and transfer */
-
 <?php
 require_once (__DIR__ . "/partials/nav.php");
 ini_set('display_errors',1);
@@ -81,7 +79,7 @@ if(isset($_POST['type']) && isset($_POST['account1']) && isset($_POST['amount'])
 	$q = "SELECT id from Accounts WHERE account_number='000000000000'";
 	$stmt = $db->prepare($q);
         $s = $stmt->execute();
-        $results = $stmt->fetch(PDO:FETCH_ASSOC);
+        $results = $stmt->fetch(PDO::FETCH_ASSOC);
 	$worldID = $results["id"];	 
 	switch($type){
 		case 'deposit':
