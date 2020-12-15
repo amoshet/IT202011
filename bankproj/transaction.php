@@ -14,28 +14,31 @@ error_reporting(E_ALL);
 // preparing account id and accounts for dropdown list
 $srcID = get_user_id();
 $db = getDB();      //if they have the same user ID, give me their accout number and ID
-$stmt = $db->prepare("SELECT id, account_number from Accounts WHERE srcID=:user_id LIMIT 10");
-$r = $stmt->execute();
+$stmt = $db->prepare("SELECT id, account_number from Accounts WHERE user_id=:user_id LIMIT 10");
+$r = $stmt->execute([":user_id"=>get_user_id()]);
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-// TODO Add dropdown list
-<form method="POST"> //working on dropdown list
+<!-- TODO Add dropdown list -->
+<form method="POST"> <!-- working on dropdown list -->
 	<label for "account1"><h3> Account</h3></label>
-	<select name="000000" id="world">
-	  <?php foreach($results):?>
-	  <option value=$results["id"]>$results["account_number"]</option>
-	  <option value="36">123445345436</option>
+	<select name="account1" id="account1">
+	  <?php foreach($results as $r):?>
+	    <option value="<?php safer_echo($r["id"]);?>"><?php safer_echo($r["account_number"]);?></option>
 	  <?php endforeach;?>
 	</select>
-	<input type="text" name="account1" placeholder="Source Account Number">
 	<!-- If our sample is a transfer show other account field-->
 	<?php if($_GET['type'] == 'transfer') : ?>
-	<input type="text" name="account2" placeholder="Destination Account Number">
+	<label for "account2"><h3> Destination Account</h3></label>
+	<select name="account2" id="account2">
+          <?php foreach($results as $r):?>
+            <option value="<?php safer_echo($r["id"]);?>"><?php safer_echo($r["account_number"]);?></option>
+          <?php endforeach;?>
+        </select>
 	<?php endif; ?>
 	
 	<input type="number" name="amount" placeholder="$0.00"/>
 	<input type="hidden" name="type" value="<?php echo $_GET['type'];?>"/>
-	
+	<input type="text" name="memo" placeholder="Write Memo Here" />
 	<!--Based on sample type change the submit button display-->
 	<input type="submit" value="Move Money"/>
 </form>
@@ -44,16 +47,25 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 if(isset($_POST['type']) && isset($_POST['account1']) && isset($_POST['amount'])){
 	$type = $_POST['type'];
 	$amount = (int)$_POST['amount'];
-	switch($type){
+	$memo = "";
+	if(isset($_POST['memo'])){
+	   $memo = $_POST['memo'];
+	}
+	if(isset($_POST['account2']) && $_POST['account1'] == $_POST['account2']){
+	    flash("Source and Destination account can not be the same!");
+	}
+	else{
+	    switch($type){
 		case 'deposit':
-			do_bank_action(getWorldID(), $_POST['account1'], ($amount * -1), $type);
+			do_bank_action(getWorldID(), $_POST['account1'], ($amount * -1), $type, $memo);
 			break;
 		case 'withdraw':
-			do_bank_action($_POST['account1'], $getWorldID, ($amount * -1), $type);
+			do_bank_action($_POST['account1'], getWorldID(), ($amount * -1), $type, $memo);
 			break;
 		case 'transfer':
-			//TODO create function for transfer
+			do_bank_action($_POST['account1'], $_POST['account2'], ($amount * -1), $type, $memo);
 			break;
+	   }
 	}
 }
 require(__DIR__ . "/partials/flash.php");
