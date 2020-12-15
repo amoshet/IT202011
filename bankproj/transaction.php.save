@@ -63,13 +63,13 @@ function do_bank_action($account1, $account2, $amountChange, $type){
 	return $result;
 
 }
-// preparing account id and accounts for dropdown list
+
+
 $db = getDB();
 $stmt = $db->prepare("SELECT id, account_number from Accounts LIMIT 10");
 $r = $stmt->execute();
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-// TODO Add dropdown list
 <form method="POST">
 	<input type="text" name="account1" placeholder="Source Account Number">
 	<!-- If our sample is a transfer show other account field-->
@@ -102,7 +102,7 @@ if(isset($_POST['type']) && isset($_POST['account1']) && isset($_POST['amount'])
 			do_bank_action($_POST['account1'], $worldID, ($amount * -1), $type);
 			break;
 		case 'transfer':
-			//TODO create function for transfer
+			//TODO figure it out
 			break;
 	}
 }

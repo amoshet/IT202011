@@ -1,3 +1,4 @@
+/* this is just a copy of view_accounts right now, must be adjusted */
 <?php require_once(__DIR__ . "/partials/nav.php"); ?>
 <?php
 if (!is_logged_in()) {
@@ -42,9 +43,9 @@ if (isset($id)) {
                         <div><?php safer_echo($r["balance"]); ?></div>
                     </div>
                     <div>
-                        <a type="button" href="transaction.php?type=<?php safer_echo("deposit"); ?>">Deposit</a>
-			<a type="button" href="transaction.php?type=<?php safer_echo("withdraw"); ?>">Withdraw</a>
-			<a type="button" href="transaction.php?type=<?php safer_echo("transfer"); ?>"><br>Transfer</a>
+                        <a type="button" href="#?>">Deposit</a>
+			<a type="button" href="#?>">Withdraw</a>
+			<a type="button" href="#?>"><br>Transfer</a>
                         <a type="button" href="view_accounts.php?id=<?php safer_echo($r['id']); ?>">Transactions</a>
                     </div> 
                 </div>
