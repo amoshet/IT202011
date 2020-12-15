@@ -48,23 +48,35 @@ if(isset($_POST['type']) && isset($_POST['account1']) && isset($_POST['amount'])
 	$type = $_POST['type'];
 	$amount = (int)$_POST['amount'];
 	$memo = "";
+	$isvalid = true;
+	if($amount <= 0){
+	    flash("Amount must be greater than 0!");
+	    $isvalid = false;
+	}
 	if(isset($_POST['memo'])){
 	   $memo = $_POST['memo'];
 	}
 	if(isset($_POST['account2']) && $_POST['account1'] == $_POST['account2']){
 	    flash("Source and Destination account can not be the same!");
+	    $isvalid = false;
 	}
-	else{
+	if($isvalid){
 	    switch($type){
 		case 'deposit':
 			do_bank_action(getWorldID(), $_POST['account1'], ($amount * -1), $type, $memo);
 			break;
 		case 'withdraw':
-			do_bank_action($_POST['account1'], getWorldID(), ($amount * -1), $type, $memo);
-			break;
+			if(getRealTimeBalance($_POST['account1']) >= $amount){
+			    do_bank_action($_POST['account1'], getWorldID(), ($amount * -1), $type, $memo);
+			}else{
+			    flash("You do not have enough to withdraw this amount");
+			}break;
 		case 'transfer':
+			if(getRealTimeBalance($_POST['account1']) >= $amount){
 			do_bank_action($_POST['account1'], $_POST['account2'], ($amount * -1), $type, $memo);
-			break;
+			}else{
+				flash("You do not have enough to transfer this amount");
+			}break;
 	   }
 	}
 }

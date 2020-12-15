@@ -1,4 +1,3 @@
-/* this is just a copy of view_accounts right now, must be adjusted */
 <?php require_once(__DIR__ . "/partials/nav.php"); ?>
 <?php
 if (!is_logged_in()) {
@@ -10,11 +9,14 @@ if (!is_logged_in()) {
 
 <?php
 //fetching
-$id = get_user_id();
+$id = -1;
+if(isset($_GET["id"])){
+    $id = $_GET["id"];
+}
 $results = [];
 if (isset($id)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT id, account_number, account_type, balance FROM Accounts WHERE user_id=:id LIMIT 5");
+    $stmt = $db->prepare("SELECT A1.account_number as Src, A2.account_number as Dest, expected_total, memo, T.action_type, T.amount from Transactions as T JOIN Accounts as A1 on A1.id = T.act_src_id JOIN Accounts as A2 on A2.id = T.act_dest_id WHERE T.act_src_id=:id LIMIT 5");
     $r = $stmt->execute([":id" => $id]);
     if ($r) {
 	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -27,30 +29,48 @@ if (isset($id)) {
 
 <div class="results">
     <?php if (count($results) > 0): ?>
-        <div class="list-group">
+        <div class="row text-center title">
+	  <div class="col">
+	    Account Number (Source)
+          </div>
+	  <div class="col">
+            Account Number (Dest)
+          </div>
+	  <div class="col">
+            Transaction Type
+          </div>
+	  <div class="col">
+            Change
+          </div>
+	  <div class="col">
+            Memo
+          </div>
+	  <div class="col">
+            Balance
+          </div>
+	  </div>
+
             <?php foreach ($results as $r): ?>
-                <div class="list-group-item">
-                    <div>
-                        <div>Account Number:</div>
-                        <div><?php safer_echo($r["account_number"]); ?></div>
+                <div class="row text-center">
+                    <div class="col">
+                        <div><?php safer_echo($r["Src"]); ?></div>
                     </div>
-                    <div>
-                        <div>Account Type:</div>
-                        <div><?php getAccount($r["account_type"]); ?></div>
+                    <div class="col">
+                        <div><?php safer_echo($r["Dest"]); ?></div>
                     </div>
-                    <div>
-                        <div>Balance:</div>
-                        <div><?php safer_echo($r["balance"]); ?></div>
+                    <div class="col">
+		    <div> <?php safer_echo($r["action_type"]);?></div></div>
+		    <div class="col">
+                        <div><?php safer_echo($r["amount"]); ?></div>
                     </div>
-                    <div>
-                        <a type="button" href="#?>">Deposit</a>
-			<a type="button" href="#?>">Withdraw</a>
-			<a type="button" href="#?>"><br>Transfer</a>
-                        <a type="button" href="view_accounts.php?id=<?php safer_echo($r['id']); ?>">Transactions</a>
-                    </div> 
+		    <div class="col">
+                           <div><?php safer_echo($r["memo"]); ?></div>
+                       </div>
+		    <div class="col">
+                           <div><?php safer_echo($r["expected_total"]); ?></div>
+                       </div>
                 </div>
             <?php endforeach; ?>
-        </div>
     <?php else: ?>
         <p>No results</p>
     <?php endif; ?>
