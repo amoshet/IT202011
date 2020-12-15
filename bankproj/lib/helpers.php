@@ -44,7 +44,7 @@ function do_bank_action($account1, $account2, $amountChange, $type){
 	$db = getDB();
 	
 	$a1total = getRealTimeBalance($account1);
-	$a2total = getRealTimeBalance($account2); //TODO get total of account 2
+	$a2total = getRealTimeBalance($account2); 
 	$a1total += $amountChange;
 	$a2total -= $amountChange; 
 	$query = "INSERT INTO `Transactions` (`act_src_id`, `act_dest_id`, `amount`, `action_type`, `expected_total`) VALUES(:p1a1, :p1a2, :p1change, :type, :a1total), (:p2a1, :p2a2, :p2change, :type, :a2total)";
@@ -79,6 +79,8 @@ function getWorldID(){
         $s = $stmt->execute();
         $results = $stmt->fetch(PDO::FETCH_ASSOC);
 	$worldID = $results["id"];
+	
+	return $worldID;
 }
 
 function get_username() {

@@ -38,7 +38,7 @@ if(isset($_POST['type']) && isset($_POST['account1']) && isset($_POST['amount'])
 	$amount = (int)$_POST['amount'];
 	switch($type){
 		case 'deposit':
-			do_bank_action($getWorldID, $_POST['account1'], ($amount * -1), $type);
+			do_bank_action(getWorldID(), $_POST['account1'], ($amount * -1), $type);
 			break;
 		case 'withdraw':
 			do_bank_action($_POST['account1'], $getWorldID, ($amount * -1), $type);
