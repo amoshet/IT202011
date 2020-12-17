@@ -16,7 +16,7 @@ if(isset($_GET["id"])){
 $results = [];
 if (isset($id)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT A1.account_number as Src, A2.account_number as Dest, expected_total, memo, T.action_type, T.amount from Transactions as T JOIN Accounts as A1 on A1.id = T.act_src_id JOIN Accounts as A2 on A2.id = T.act_dest_id WHERE T.act_src_id=:id LIMIT 5");
+    $stmt = $db->prepare("SELECT A1.account_number as Src, A2.account_number as Dest, expected_total, memo, T.action_type, T.amount from Transactions as T JOIN Accounts as A1 on A1.id = T.act_src_id JOIN Accounts as A2 on A2.id = T.act_dest_id WHERE T.act_src_id=:id LIMIT 50");
     $r = $stmt->execute([":id" => $id]);
     if ($r) {
 	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
