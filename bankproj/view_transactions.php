@@ -27,50 +27,32 @@ if (isset($id)) {
 }
 ?>
 
-<div class="results">
+<table class="table table-bordered">
     <?php if (count($results) > 0): ?>
-        <div class="row text-center title">
-	  <div class="col">
-	    Account Number (Source)
-          </div>
-	  <div class="col">
-            Account Number (Dest)
-          </div>
-	  <div class="col">
-            Transaction Type
-          </div>
-	  <div class="col">
-            Change
-          </div>
-	  <div class="col">
-            Memo
-          </div>
-	  <div class="col">
-            Balance
-          </div>
-	  </div>
+        <thead>
+	 <tr class="text-center">
+	   <th scope="col">Account Number (Source)</th>
+           <th scope="col">Account Number (Dest)</th>
+           <th scope="col">Transaction Type</th>
+           <th scope="col">Change</th>
+           <th scope="col">Memo</th>
+           <th scope="col">Balance</th>
+	  </tr>
+	</thead>
 
             <?php foreach ($results as $r): ?>
-                <div class="row text-center">
-                    <div class="col">
-                        <div><?php safer_echo($r["Src"]); ?></div>
-                    </div>
-                    <div class="col">
-                        <div><?php safer_echo($r["Dest"]); ?></div>
-                    </div>
-                    <div class="col">
-		    <div> <?php safer_echo($r["action_type"]);?></div></div>
-		    <div class="col">
-                        <div><?php safer_echo($r["amount"]); ?></div>
-                    </div>
-		    <div class="col">
-                           <div><?php safer_echo($r["memo"]); ?></div>
-                       </div>
-		    <div class="col">
-                           <div><?php safer_echo($r["expected_total"]); ?></div>
-                       </div>
-                </div>
+                <tbody>
+		  <tr>
+                    <td class="text-center"><?php safer_echo($r["Src"]);?></td>
+                    <td class="text-center"><?php safer_echo($r["Dest"]);?></td>
+		    <td class="text-center"><?php safer_echo($r["action_type"]);?></td>
+                    <td class="text-center"><?php safer_echo($r["amount"]);?></td>
+                    <td class="text-center"><?php safer_echo($r["memo"]);?></td>
+                    <td class="text-center"><?php safer_echo($r["expected_total"]);?></td>
+                </tr>
             <?php endforeach; ?>
+	  </tbody>
+        </table>
     <?php else: ?>
         <p>No results</p>
     <?php endif; ?>
