@@ -68,8 +68,8 @@ function do_bank_action($account1, $account2, $amountChange, $type, $memo){
 	   updateBalance($account1);
 	   updateBalance($account2);
 	}
-	echo var_export($result, true);
-	echo var_export($stmt->errorInfo(), true);
+	//echo var_export($result, true);
+	//echo var_export($stmt->errorInfo(), true);
 	return $result;
 
 }
