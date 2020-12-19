@@ -10,10 +10,18 @@ if (!is_logged_in()) {
 }
 
 $db = getDB();
+//preloads first and last name into profile
+$stmt = $db->prepare("SELECT firstName, lastName from Users WHERE id = :id LIMIT 1");
+            $stmt->execute([":id" => get_user_id()]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result) {
+                $firstName = $result["firstName"];
+		$lastName = $result["lastName"];
+	    }
 //save data if we submitted the form
 if (isset($_POST["saved"])) {
     $newFirstName = $_POST["firstName"];
-    $newLastName = $_POST["lastName"];    
+    $newLastName = $_POST["lastName"];
     $isValid = true;
     //check if our email changed
     $newEmail = get_email();
