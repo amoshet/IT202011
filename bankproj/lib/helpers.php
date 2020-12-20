@@ -87,7 +87,7 @@ function getWorldID(){
 
 function getAccNum($id){
 	$db = getDB();
-	$stmt = $db->prepare("SELECT account_number from Accounts where id=:q");
+	$stmt = $db->prepare("SELECT account_number from Accounts WHERE id=:q");
 	$results = $stmt->execute([":q" => $id]);
 	
 	return $results["account_number"];
