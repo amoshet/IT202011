@@ -40,14 +40,14 @@ function updateBalance($accountid){
     $s = $stmt->execute([":id" => $accountid]);
 }
 
-function do_bank_action($account1, $account2, $amountChange, $type, $memo){
+function do_bank_action($account1, $account2, $amountChange, $type, $memo, $date){
 	$db = getDB();
 	
 	$a1total = getRealTimeBalance($account1);
 	$a2total = getRealTimeBalance($account2); 
 	$a1total += $amountChange;
 	$a2total -= $amountChange; 
-	$query = "INSERT INTO `Transactions` (`act_src_id`, `act_dest_id`, `amount`, `action_type`, `memo`, `expected_total`) VALUES(:p1a1, :p1a2, :p1change, :type, :memo, :a1total), (:p2a1, :p2a2, :p2change, :type, :memo, :a2total)";
+	$query = "INSERT INTO `Transactions` (`act_src_id`, `act_dest_id`, `amount`, `action_type`, `memo`, `expected_total`, `created`) VALUES(:p1a1, :p1a2, :p1change, :type, :memo, :a1total, :date), (:p2a1, :p2a2, :p2change, :type, :memo, :a2total, :date)";
 	
 	$stmt = $db->prepare($query);
 	$stmt->bindValue(":p1a1", $account1);
@@ -56,6 +56,7 @@ function do_bank_action($account1, $account2, $amountChange, $type, $memo){
 	$stmt->bindValue(":type", $type);
 	$stmt->bindValue(":memo", $memo);
 	$stmt->bindValue(":a1total", $a1total);
+	$stmt->bindValue(":date", $date);
 	//flip data for other half of transaction
 	$stmt->bindValue(":p2a1", $account2);
 	$stmt->bindValue(":p2a2", $account1);
@@ -63,6 +64,7 @@ function do_bank_action($account1, $account2, $amountChange, $type, $memo){
 	$stmt->bindValue(":type", $type);
 	$stmt->bindValue(":memo", $memo);
 	$stmt->bindValue(":a2total", $a2total);
+	$stmt->bindValue(":date", $date);
 	$result = $stmt->execute();
 	if($result){
 	   updateBalance($account1);
