@@ -40,7 +40,7 @@ if (isset($id)) {
 			<a type="button" class = "btn btn-primary" href="transaction.php?type=<?php safer_echo("deposit");?>">Deposit</a>
 			<a type="button" class = "btn btn-primary" href="transaction.php?type=<?php safer_echo("withdraw");?>">Withdraw</a>
 			<a type="button" class = "btn btn-primary" href="transaction.php?type=<?php safer_echo("transfer");?>">Transfer</a>
-			<a type="button" class = "btn btn-primary" href="transaction.php?type=<?php safer_echo("ext_transfer");?>">External Transfer</a>
+			<a type="button" class = "btn btn-primary" href="ext_transaction.php?type=<?php safer_echo("ext_transfer");?>">External Transfer</a>
 			<a type="button" class = "btn btn-primary" href="view_transactions.php?id=<?php safer_echo($r['id']);?>">Transactions</a>
                    </div>
             <?php endforeach; ?>
