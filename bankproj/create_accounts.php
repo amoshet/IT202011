@@ -25,7 +25,7 @@ if(isset($_POST["save"])){
 	    flash("Minimum $5 balance in order to open an account");
 	}
        	else{
-	    $acctnum = 123456789110; //rand(100000000000, 999999999999);
+	    $acctnum = rand(100000000000, 999999999999);
             $accttype = $_POST["account_type"];
 	    $user = get_user_id();
 	    $db = getDB();
