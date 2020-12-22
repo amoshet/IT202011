@@ -6,7 +6,7 @@ if (!is_logged_in()) {
     die(header("Location: login.php"));
 }
 ?>
-// bootstrap for pagination
+
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 </head>
