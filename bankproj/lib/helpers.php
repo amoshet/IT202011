@@ -83,8 +83,9 @@ function do_bank_extTransfer($account1, $account2, $lastName, $amountChange, $ty
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
         }
         else {
-            $e = $stmt->errorInfo();
-        flash($e[2]);
+           // $e = $stmt->errorInfo();
+        //flash($e[2]);
+	    flash("there was an error with your transaction. Please check the details and try again.");
         }
 	$account2 = $result['id'];
 
