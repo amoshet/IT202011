@@ -20,7 +20,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!-- TODO Add dropdown list -->
 <form method="POST"> <!-- working on dropdown list -->
-	<label for "account1"><h3> Account</h3></label>
+	<label for "account1"><h3> Source Account</h3></label>
 	<select name="account1" id="account1">
 	  <?php foreach($results as $r):?>
 	    <option value="<?php safer_echo($r["id"]);?>"><?php safer_echo($r["account_number"]);?></option>
@@ -35,6 +35,15 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
           <?php endforeach;?>
         </select>
 	<?php endif; ?>
+	<!-- TODO adjust this to make it work for external transfer -->
+	<?php if($_GET['type'] == 'ext_transfer') : ?>
+        <label for "account2"><h3> Destination Account</h3></label>
+        <select name="account2" id="account2">
+          <?php foreach($results as $r):?>
+            <option value="<?php safer_echo($r["id"]);?>"><?php safer_echo($r["account_number"]);?></option>
+          <?php endforeach;?>
+        </select>
+        <?php endif; ?>
 	
 	<input type="number" name="amount" placeholder="$0.00"/>
 	<input type="hidden" name="type" value="<?php echo $_GET['type'];?>"/>
@@ -83,6 +92,13 @@ if(isset($_POST['type']) && isset($_POST['account1']) && isset($_POST['amount'])
 			}else{
 				flash("You do not have enough to transfer this amount");
 			}break;
+		/* case 'ext_transfer':
+                        if(getRealTimeBalance($_POST['account1']) >= $amount){
+			    do_bank_action($_POST['account1'], $_POST['account2'], ($amount * -1), $type, $memo);
+                            flash("Your transaction has successfully been posted!");
+                        }else{
+                                flash("You do not have enough to transfer this amount");
+                        }break; */
 	   }
 	}
 }

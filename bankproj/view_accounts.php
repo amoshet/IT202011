@@ -26,21 +26,22 @@ if (isset($id)) {
 
 <div class="results">
     <?php if (count($results) > 0): ?>
-        <div class="card">
+        <div class="list-group-item">
             <?php foreach ($results as $r): ?>
-                <div class="card-title">
+                <div class="list-group-flush">
                     <span>
                     	 <span><h3><b><u> Account Information:</h3></b></u> </span>
 	           </span>
-		   <div class="card-body">
+		   <div class="list-group-item">
 			<div><pre class="space">Account Number: <?php safer_echo($r["account_number"]) ?></pre></div>
                         <div><pre class="space">Account Type:   <?php safer_echo(getAccount($r["account_type"])) ?></pre></div>                   
                         <div><pre class="space">Balance:        $<?php safer_echo($r["balance"]);?></pre></div>
                        
-			<a type="button" href="transaction.php?type=<?php safer_echo("deposit");?>">Deposit</a>
-			<a type="button" href="transaction.php?type=<?php safer_echo("withdraw");?>">Withdraw</a>
-			<a type="button" href="transaction.php?type=<?php safer_echo("transfer");?>">Transfer</a>
-                        <a type="button" href="view_transactions.php?id=<?php safer_echo($r['id']);?>">Transactions</a>
+			<a type="button" class = "btn btn-primary" href="transaction.php?type=<?php safer_echo("deposit");?>">Deposit</a>
+			<a type="button" class = "btn btn-primary" href="transaction.php?type=<?php safer_echo("withdraw");?>">Withdraw</a>
+			<a type="button" class = "btn btn-primary" href="transaction.php?type=<?php safer_echo("transfer");?>">Transfer</a>
+			<a type="button" class = "btn btn-primary" href="ext_transaction.php?type=<?php safer_echo("ext_transfer");?>">External Transfer</a>
+			<a type="button" class = "btn btn-primary" href="view_transactions.php?id=<?php safer_echo($r['id']);?>">Transactions</a>
                    </div>
             <?php endforeach; ?>
         </div>

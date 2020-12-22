@@ -26,26 +26,25 @@ if(isset($_POST["save"])){
 	}
        	else{
 	    $acctnum = rand(100000000000, 999999999999);
-	    $accttype = $_POST["account_type"];
+            $accttype = $_POST["account_type"];
 	    $user = get_user_id();
 	    $db = getDB();
 	    $stmt = $db->prepare("INSERT INTO Accounts (account_number,account_type, user_id) VALUES(:account_number, :account_type, :user)");
 	    $r = $stmt->execute([
-		":account_number"=>$acctnum,
-		":account_type"=>$accttype,
-		":user"=>$user
+	        ":account_number"=>$acctnum,
+	        ":account_type"=>$accttype,
+	        ":user"=>$user
 	    ]);
 	    if($r){
-		$accountID = $db->lastInsertId();
+	        $accountID = $db->lastInsertId();
 		do_bank_action(getWorldID(), $accountID, ($bal*-1), "open", "new account");
 	    	flash("Account created successfully! Your new account has an id number of: " . $accountID);
 		die(header("Location: ./view_accounts.php"));  
 	    }
 	    else{
-	        $e = $stmt->errorInfo();
-		flash("There was an error creating your account. Please try again." //. var_export($e, true));
+	        flash("There was an error creating your account. Please try again.");
 	    }
-      }
+        }
 }
 ?>
 <?php require(__DIR__ . "/partials/flash.php");

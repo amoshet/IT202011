@@ -47,7 +47,7 @@ function do_bank_action($account1, $account2, $amountChange, $type, $memo){
 	$a1total += $amountChange;
 	$a2total -= $amountChange; 
 	$query = "INSERT INTO `Transactions` (`act_src_id`, `act_dest_id`, `amount`, `action_type`, `memo`, `expected_total`) VALUES(:p1a1, :p1a2, :p1change, :type, :memo, :a1total), (:p2a1, :p2a2, :p2change, :type, :memo, :a2total)";
-	
+
 	$stmt = $db->prepare($query);
 	$stmt->bindValue(":p1a1", $account1);
 	$stmt->bindValue(":p1a2", $account2);
@@ -73,6 +73,52 @@ function do_bank_action($account1, $account2, $amountChange, $type, $memo){
 
 }
 
+function do_bank_extTransfer($account1, $account2, $lastName, $amountChange, $type, $memo){
+        $db = getDB();
+        
+	$stmt = $db ->prepare("SELECT Accounts.id FROM Accounts JOIN Users on Users.id=Accounts.user_id WHERE Accounts.account_number like :account2 AND Users.lastName like :lastName");
+        $r = $stmt->execute([ ":account2" => "%$account2", ":lastName" => "%$lastName%"]);
+        if ($r) {
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+        else {
+            $e = $stmt->errorInfo();
+        flash($e[2]);
+        }
+	$account2 = $result['id'];
+
+        $a1total = getRealTimeBalance($account1);
+        $a2total = getRealTimeBalance($account2); 
+        $a1total += $amountChange;
+        $a2total -= $amountChange; 
+        $query = "INSERT INTO `Transactions` (`act_src_id`, `act_dest_id`, `amount`, `action_type`, `memo`, `expected_total`) VALUES(:p1a1, :p1a2, :p1change, :type, :memo, :a1total), (:p2a1, :p2a2, :p2change, :type, :memo, :a2total)";
+
+        $stmt = $db->prepare($query);
+        $stmt->bindValue(":p1a1", $account1);
+        $stmt->bindValue(":p1a2", $account2);
+        $stmt->bindValue(":p1change", $amountChange);
+        $stmt->bindValue(":type", $type);
+        $stmt->bindValue(":memo", $memo);
+        $stmt->bindValue(":a1total", $a1total);
+        //flip data for other half of transaction
+        $stmt->bindValue(":p2a1", $account2);
+        $stmt->bindValue(":p2a2", $account1);
+        $stmt->bindValue(":p2change", ($amountChange*-1));
+        $stmt->bindValue(":type", $type);
+        $stmt->bindValue(":memo", $memo);
+        $stmt->bindValue(":a2total", $a2total);
+        $result = $stmt->execute();
+        if($result){
+           updateBalance($account1);
+           updateBalance($account2);
+        }
+        //echo var_export($result, true);
+        //echo var_export($stmt->errorInfo(), true);
+        return $result;
+
+}
+
+
 function getWorldID(){
 	$db = getDB();
 	$q = "SELECT id from Accounts WHERE account_number='000000000000'";
@@ -86,7 +132,7 @@ function getWorldID(){
 
 function getAccNum($id){
 	$db = getDB();
-	$stmt = $db->prepare("SELECT account_number from Accounts where id=:q");
+	$stmt = $db->prepare("SELECT account_number from Accounts WHERE id=:q");
 	$results = $stmt->execute([":q" => $id]);
 	
 	return $results["account_number"];
