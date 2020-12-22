@@ -52,6 +52,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	<input type="submit" value="Move Money"/>
 </form>
 
+
 <?php
 if(isset($_POST['type']) && isset($_POST['account1']) && isset($_POST['amount'])){
 	$type = $_POST['type'];
@@ -92,13 +93,6 @@ if(isset($_POST['type']) && isset($_POST['account1']) && isset($_POST['amount'])
 			}else{
 				flash("You do not have enough to transfer this amount");
 			}break;
-		/* case 'ext_transfer':
-                        if(getRealTimeBalance($_POST['account1']) >= $amount){
-			    do_bank_action($_POST['account1'], $_POST['account2'], ($amount * -1), $type, $memo);
-                            flash("Your transaction has successfully been posted!");
-                        }else{
-                                flash("You do not have enough to transfer this amount");
-                        }break; */
 	   }
 	}
 }

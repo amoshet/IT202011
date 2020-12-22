@@ -6,6 +6,25 @@ if (!is_logged_in()) {
     die(header("Location: login.php"));
 }
 ?>
+// bootstrap for pagination
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+
+
+<?php  //TODO Work on pagination attempt
+$page = 1;
+$per_page = 10;
+if(isset($_GET["page"])){
+    try {
+        $page = (int)$_GET["page"];
+    }
+    catch(Exception $e){
+
+    }
+}
+
+?>
 
 <?php
 //fetching
@@ -16,7 +35,7 @@ if(isset($_GET["id"])){
 $results = [];
 if (isset($id)) {
     $db = getDB();
-    $stmt = $db->prepare("SELECT A1.account_number as Src, A2.account_number as Dest, expected_total, memo, T.action_type, T.amount from Transactions as T JOIN Accounts as A1 on A1.id = T.act_src_id JOIN Accounts as A2 on A2.id = T.act_dest_id WHERE T.act_src_id=:id LIMIT 50");
+    $stmt = $db->prepare("SELECT A1.account_number as Src, A2.account_number as Dest, expected_total, memo, T.action_type, T.amount from Transactions as T JOIN Accounts as A1 on A1.id = T.act_src_id JOIN Accounts as A2 on A2.id = T.act_dest_id WHERE T.act_src_id=:id LIMIT 10");
     $r = $stmt->execute([":id" => $id]);
     if ($r) {
 	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -56,5 +75,13 @@ if (isset($id)) {
     <?php else: ?>
         <p>No results</p>
     <?php endif; ?>
-</div>
+
+<p></p>
+  <ul class="pagination pagination-lg">
+    <li><a href="#">1</a></li>
+    <li><a href="#">2</a></li>
+    <li><a href="#">3</a></li>
+    <li><a href="#">4</a></li>
+    <li><a href="#">5</a></li>
+  </ul>
 <?php require(__DIR__ . "/partials/flash.php"); ?>
