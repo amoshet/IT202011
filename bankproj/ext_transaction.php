@@ -7,9 +7,9 @@ if (!is_logged_in()) {
     die(header("Location: login.php"));
 }
 
-ini_set('display_errors',1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors',1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 
 // preparing account id and accounts for dropdown list
 $srcID = get_user_id();
@@ -30,7 +30,7 @@ $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	<label for "account2"><h3><u>Transfer to Account:</u></h3></label>
         <input type="number" name="account2" min="999" max="9999" placeholder="Enter Last 4 Digits of Account Number"    required/>
 	<input type="text" name="lastName" placeholder="Enter Last Name of Account Holder" required/>
-	<input type="number" name="amount" placeholder="$0.00" required/>
+	<input type="number" name="amount" min="0" placeholder="$0.00" required/>
 	<input type="hidden" name="type" value="<?php echo $_GET['type'];?>"/>
 	<input type="text" name="memo" placeholder="Write Memo Here" />
 	<!--Based on sample type change the submit button display-->
@@ -60,7 +60,7 @@ if(isset($_POST['type']) && isset($_POST['account1']) && isset($_POST['amount'])
 	if($isvalid){
 	    if(getRealTimeBalance($_POST['account1']) >= $amount){
 	        do_bank_extTransfer($_POST['account1'], $_POST['account2'], $_POST['lastName'], ($amount * -1), $type, $memo);
-	        flash("Your transaction has successfully been posted!");
+	        flash("Your transfer has successfully been completed!");
 	    }else{
 		flash("You do not have enough to transfer this amount");
 	    }
